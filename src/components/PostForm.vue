@@ -15,7 +15,7 @@
     >
     <button
         class="form__btn"
-        @click.prevent="createPost"
+        @click="createPost"
         :disabled="!title || !descr"
     >
       Создать
