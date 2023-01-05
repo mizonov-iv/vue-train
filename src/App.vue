@@ -2,6 +2,10 @@
   <div class="container">
     <h1>Список постов</h1>
     <button class="btn" @click="showDialog">Создать пост</button>
+    <SortDropdown
+        v-model="selectedSort"
+        :options="sortOptions"
+    />
     <Modal :show="dialogVisible" @hideDialog="hideDialog">
       <PostForm @createPost="createPost"/>
     </Modal>
@@ -14,15 +18,21 @@
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
 import Modal from "@/components/Modal";
+import SortDropdown from "@/components/SortDropdown";
 import axios from "axios";
 
 export default {
   name: 'App',
-  components: {PostForm, PostList, Modal},
+  components: {PostForm, PostList, Modal, SortDropdown},
   data: () => ({
     posts: [],
     dialogVisible: false,
-    isLoading: false
+    isLoading: false,
+    selectedSort: '',
+    sortOptions: [
+      {value: 'title', name: 'По заголовку'},
+      {value: 'body', name: 'По содержанию'},
+    ]
   }),
   methods: {
     createPost(newPost) {
