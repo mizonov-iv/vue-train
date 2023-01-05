@@ -1,10 +1,12 @@
 <template>
   <div class="container">
-    <button @click="showDialog">Создать пост</button>
+    <h1>Список постов</h1>
+    <button class="btn" @click="showDialog">Создать пост</button>
     <Modal :show="dialogVisible" @hideDialog="hideDialog">
       <PostForm @createPost="createPost"/>
     </Modal>
-    <PostList :posts="posts" @deletePost="deletePost"/>
+    <PostList :posts="posts" @deletePost="deletePost" v-if="!isLoading"/>
+    <div v-else>Идет загрузка...</div>
   </div>
 </template>
 
@@ -12,16 +14,15 @@
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
 import Modal from "@/components/Modal";
+import axios from "axios";
 
 export default {
   name: 'App',
   components: {PostForm, PostList, Modal},
   data: () => ({
-    posts: [
-      {id: 1, title: 'Название 1', descr: 'Какой-то текст'},
-      {id: 2, title: 'Название 2', descr: 'Какой-то текст'},
-    ],
-    dialogVisible: false
+    posts: [],
+    dialogVisible: false,
+    isLoading: false
   }),
   methods: {
     createPost(newPost) {
@@ -31,13 +32,26 @@ export default {
     deletePost(post) {
       this.posts = this.posts.filter(p => p.id !== post.id)
     },
+    fetchPosts() {
+      this.isLoading = true
+      axios.get('https://jsonplaceholder.typicode.com/posts?_limit=15')
+          .then(response => {
+            this.posts = response.data
+            this.isLoading = false
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    },
     showDialog() {
       this.dialogVisible = true
     },
     hideDialog() {
       this.dialogVisible = false
     }
-
+  },
+  mounted() {
+    this.fetchPosts()
   }
 }
 </script>
@@ -50,6 +64,15 @@ export default {
 }
 .container {
   padding: 20px;
+}
+.btn {
+  padding: 10px;
+  margin: 5px;
+  background-color: blueviolet;
+  border: none;
+}
+.btn:hover {
+  color: #FFFF;
 }
 
 </style>

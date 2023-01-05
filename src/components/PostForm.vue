@@ -11,12 +11,12 @@
         type="text"
         placeholder="Описание"
         class="form__input"
-        v-model="descr"
+        v-model="body"
     >
     <button
         class="form__btn"
         @click="createPost"
-        :disabled="!title || !descr"
+        :disabled="!title || !body"
     >
       Создать
     </button>
@@ -27,19 +27,18 @@
 export default {
   data: () => ({
     title: '',
-    descr: ''
+    body: ''
   }),
   methods: {
     createPost() {
       const newPost = {
         id: new Date(),
         title: this.title,
-        descr: this.descr
+        body: this.body
       }
       this.$emit('createPost', newPost)
-      console.log(newPost)
       this.title = ''
-      this.descr = ''
+      this.body = ''
     }
   }
 

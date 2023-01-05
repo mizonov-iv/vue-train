@@ -3,7 +3,7 @@
     <div class="post" v-for="post in posts" :key="post.id" v-if="$props.posts.length">
       <div>
         <div><strong>Название поста:</strong> {{ post.title }}</div>
-        <div><strong>Текст поста:</strong> {{ post.descr }}</div>
+        <div><strong>Текст поста:</strong> {{ post.body }}</div>
       </div>
       <div>
         <button class="post__btn" @click="$emit('deletePost', post)">Удалить</button>
