@@ -1,6 +1,6 @@
 <template>
-  <select v-model="modelValue" @change="changeOption">
-    <option disabled value="">Отсортировать по...</option>
+  <select class="dropdown" v-model="modelValue" @change="changeOption">
+    <option disabled value="">Сортировка</option>
     <option
         v-for="option in options"
         :key="option.value"
@@ -31,5 +31,7 @@ export default {
 </script>
 
 <style scoped>
-
+.dropdown {
+  width: 150px;
+}
 </style>

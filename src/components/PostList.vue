@@ -12,8 +12,6 @@
       </div>
       <div v-else>Посты отсутсвуют</div>
     </transition-group>
-
-
   </div>
 </template>
 

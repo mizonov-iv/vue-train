@@ -1,15 +1,18 @@
 <template>
   <div class="container">
     <h1>Список постов</h1>
-    <button class="btn" @click="showDialog">Создать пост</button>
-    <SortDropdown
-        v-model="selectedSort"
-        :options="sortOptions"
-    />
+    <input class="search__input" type="text" v-model="searchQuery" placeholder="Поиск по названию">
+    <div style="display: flex; justify-content: space-between">
+      <button class="btn" @click="showDialog">Создать пост</button>
+      <SortDropdown
+          v-model="selectedSort"
+          :options="sortOptions"
+      />
+    </div>
     <Modal :show="dialogVisible" @hideDialog="hideDialog">
       <PostForm @createPost="createPost"/>
     </Modal>
-    <PostList :posts="posts" @deletePost="deletePost" v-if="!isLoading"/>
+    <PostList :posts="sortedAndSearchedPosts" @deletePost="deletePost" v-if="!isLoading"/>
     <div v-else>Идет загрузка...</div>
   </div>
 </template>
@@ -32,7 +35,8 @@ export default {
     sortOptions: [
       {value: 'title', name: 'По заголовку'},
       {value: 'body', name: 'По содержанию'},
-    ]
+    ],
+    searchQuery: '',
   }),
   methods: {
     createPost(newPost) {
@@ -63,13 +67,14 @@ export default {
   mounted() {
     this.fetchPosts()
   },
-  watch: {
-    selectedSort(newValue) {
-      this.posts.sort((post1, post2) => {
-        return post1[newValue]?.localeCompare(post2[newValue])
-      })
+  computed: {
+    sortedPosts() {
+      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+    },
+    sortedAndSearchedPosts () {
+      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
     }
-  }
+  },
 }
 </script>
 
@@ -90,6 +95,12 @@ export default {
 }
 .btn:hover {
   color: #FFFF;
+}
+.search__input {
+  width: 100%;
+  padding: 5px;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 </style>
